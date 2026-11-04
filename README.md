@@ -3,7 +3,7 @@
 App de Windows para o **pokeidle.io**: suas contas (até 4) rodando juntas em segundo plano, onde caçar, mercado,
 automações e os bônus de lives da Twitch e da Kick, tudo num lugar só.
 
-**[⬇️ Baixar a versão mais nova](https://github.com/Garcia019/pokeidle-dex-releases/releases/latest)** · Windows 10/11 · grátis
+**[⬇️ Baixar a versão mais nova](https://github.com/Garcia019/pokeidle-dex-releases/releases/latest)** · Windows 10/11 · grátis · **[🌐 Site do app](https://garcia019.github.io/pokeidle-dex-releases/)**
 
 ![Painel com duas contas](imagens/painel.png)
 
