@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PokeIdle DEX</title>
+<meta name="description" content="App grátis de Windows para o pokeidle.io: até 4 contas juntas em segundo plano, onde caçar, automações, mercado e bônus de lives num lugar só.">
+<meta property="og:title" content="PokeIdle DEX: suas contas do pokeidle.io num lugar só">
+<meta property="og:description" content="Até 4 contas em segundo plano, simulador de hunts, automações e bônus de lives. Grátis para Windows 10/11.">
+<meta property="og:image" content="https://garcia019.github.io/pokeidle-dex-releases/imagens/painel.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* Same tokens as the app (src/App.css, spec part 10): light = classic device, dark = direction B. */
+:root {
+  --fonte: "Space Grotesk", system-ui, sans-serif;
+  --fonte-num: "JetBrains Mono", ui-monospace, monospace;
+  --raio: 16px; --raio-controle: 8px; --raio-tela: 12px;
+}
+:root, :root[data-theme="light"] {
+  color-scheme: light;
+  --fundo: #b3122a; --fundo-texto: #fff4f0; --fundo-fraco: #ffd9d2;
+  --topo: #8e0e21; --topo-texto: #fff4f0;
+  --superficie: #f1ece1; --superficie-elevada: #faf7f1; --texto: #1f2a1c; --texto-fraco: #4a4f45; --borda: #7a0e1c;
+  --borda-controle: #7a0e1c;
+  --tela: #b9d3a2; --tela-borda: #233d2a; --tela-texto: #14261a; --tela-fraco: #2e4a33;
+  --lente-aro: #f4f4f4;
+  --destaque: #8e0e21; --destaque-texto: #ffffff;
+  --nav-ativa-fundo: #fff4f0; --nav-ativa-texto: #8e0e21; --nav-texto: #fff4f0;
+  --barra-fundo: #d6cfbf; --barra: #8e0e21; --vida: #233d2a;
+  --ok-fundo: #dcebd3; --ok: #1f5a33;
+  --atencao-fundo: #fbe3d2; --atencao: #8a2e0e;
+  --info-fundo: #dce8f6; --info: #1d4f8a;
+  --neutro-fundo: #e2dccf; --neutro: #3f443c;
+  --superficie-2: #e8e1d3; --linha: rgb(31 42 28 / 0.14); --sombra: 0 1px 2px rgb(60 0 10 / 0.25), 0 8px 24px rgb(60 0 10 / 0.18);
+  --borda-cartao: transparent;
+  --cta-fundo: #fff4f0; --cta-texto: #8e0e21;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --fundo: #0e1013; --fundo-texto: #e8eaed; --fundo-fraco: #9aa3ae;
+    --topo: #16191e; --topo-texto: #e8eaed;
+    --superficie: #16191e; --superficie-elevada: #1d2128; --texto: #e8eaed; --texto-fraco: #9aa3ae; --borda: #262b33;
+    --borda-controle: #3a414c;
+    --tela: #0b1a26; --tela-borda: #1e3a52; --tela-texto: #e8eaed; --tela-fraco: #93aabd;
+    --lente-aro: #e5484d;
+    --destaque: #c7373d; --destaque-texto: #ffffff;
+    --nav-ativa-fundo: #2a1416; --nav-ativa-texto: #ff8a8f; --nav-texto: #b4bac4;
+    --barra-fundo: #262b33; --barra: #e5484d; --vida: #5eb1ff;
+    --ok-fundo: #10261a; --ok: #6ee7a0;
+    --atencao-fundo: #2b1a0c; --atencao: #fdba74;
+    --info-fundo: #0b1a26; --info: #8cc8ff;
+    --neutro-fundo: #22262d; --neutro: #c9ced6;
+    --superficie-2: #1d2128; --linha: #262b33; --sombra: none; --borda-cartao: #262b33; --cta-fundo: #c7373d; --cta-texto: #ffffff;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --fundo: #0e1013; --fundo-texto: #e8eaed; --fundo-fraco: #9aa3ae;
+  --topo: #16191e; --topo-texto: #e8eaed;
+  --superficie: #16191e; --superficie-elevada: #1d2128; --texto: #e8eaed; --texto-fraco: #9aa3ae; --borda: #262b33;
+  --borda-controle: #3a414c;
+  --tela: #0b1a26; --tela-borda: #1e3a52; --tela-texto: #e8eaed; --tela-fraco: #93aabd;
+  --lente-aro: #e5484d;
+  --destaque: #c7373d; --destaque-texto: #ffffff;
+  --nav-ativa-fundo: #2a1416; --nav-ativa-texto: #ff8a8f; --nav-texto: #b4bac4;
+  --barra-fundo: #262b33; --barra: #e5484d; --vida: #5eb1ff;
+  --ok-fundo: #10261a; --ok: #6ee7a0;
+  --atencao-fundo: #2b1a0c; --atencao: #fdba74;
+  --info-fundo: #0b1a26; --info: #8cc8ff;
+  --neutro-fundo: #22262d; --neutro: #c9ced6;
+  --superficie-2: #1d2128; --linha: #262b33; --sombra: none; --borda-cartao: #262b33; --cta-fundo: #c7373d; --cta-texto: #ffffff;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0; background: var(--fundo); color: var(--fundo-texto);
+  font: 400 16px/1.55 var(--fonte); -webkit-font-smoothing: antialiased;
+}
+img { display: block; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--info); outline-offset: 2px; border-radius: 4px; }
+.num { font-family: var(--fonte-num); font-variant-numeric: tabular-nums; }
+.wrap { max-width: 1160px; margin: 0 auto; padding: 0 16px; }
+.pixel { image-rendering: pixelated; }
+
+/* Top bar: same pieces as the app header (lens, LEDs, name). */
+.topbar { position: sticky; top: 0; z-index: 10; background: var(--topo); color: var(--topo-texto); }
+.topbar .wrap { display: flex; align-items: center; gap: 24px; min-height: 64px; }
+.marca { display: flex; align-items: center; gap: 8px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.lente { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--lente-aro);
+  background: radial-gradient(circle at 35% 35%, #7cc4ff, #1d6fd1 60%, #0b3f84); flex: none; }
+.leds { display: flex; gap: 4px; }
+.leds i { width: 6px; height: 6px; border-radius: 50%; }
+.leds i:nth-child(1) { background: #ff5a5a; } .leds i:nth-child(2) { background: #ffd23f; } .leds i:nth-child(3) { background: #4cd27a; }
+.topbar nav { display: flex; gap: 4px; margin-left: auto; }
+.topbar nav a { text-decoration: none; padding: 8px 12px; border-radius: var(--raio-controle); font-weight: 500; font-size: 14px; color: var(--nav-texto); }
+.topbar nav a:hover { background: rgb(255 255 255 / 0.08); }
+.tema { min-width: 44px; min-height: 44px; border-radius: var(--raio-controle); border: 1px solid rgb(255 255 255 / 0.3);
+  background: transparent; color: var(--topo-texto); font: inherit; cursor: pointer; }
+@media (max-width: 820px) { .topbar nav { display: none; } .tema { margin-left: auto; } .topbar .wrap { gap: 8px; } }
+@media (max-width: 360px) { .topbar .leds { display: none; } .topbar .btn-sm { padding: 0 12px; } }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 24px;
+  border-radius: var(--raio-controle); font: 700 16px var(--fonte); text-decoration: none; cursor: pointer; border: 0; }
+.btn-principal { background: var(--destaque); color: var(--destaque-texto); }
+.btn-principal:hover { filter: brightness(1.12); }
+.btn-claro { background: var(--cta-fundo); color: var(--cta-texto); }
+.btn-contorno { background: transparent; color: inherit; border: 1px solid currentColor; }
+.btn-sm { min-height: 36px; padding: 0 16px; font-size: 13px; }
+
+/* Hero */
+.hero { padding: 64px 0 40px; text-align: center; }
+.selo { display: inline-flex; gap: 8px; align-items: center; padding: 4px 12px; border-radius: 99px;
+  background: rgb(0 0 0 / 0.18); font-size: 13px; font-weight: 500; }
+.selo b { color: #6ee7a0; }
+h1 { font-size: clamp(32px, 6vw, 56px); line-height: 1.08; margin: 16px auto 16px; max-width: 18ch; letter-spacing: -0.02em; }
+.hero p.sub { font-size: clamp(16px, 2.2vw, 20px); color: var(--fundo-fraco); max-width: 60ch; margin: 0 auto 32px; }
+.acoes { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.miudo { margin-top: 16px; font-size: 13px; color: var(--fundo-fraco); }
+.provas { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: center; margin-top: 24px; font-size: 14px; }
+.provas span::before { content: "✓ "; color: #6ee7a0; font-weight: 700; }
+:root[data-theme="light"] .provas span::before { color: #fff4f0; }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .provas span::before, :root:not([data-theme="dark"]) .selo b { color: #fff4f0; } }
+
+/* App window mock: real layout of the app, rebuilt in HTML. */
+.janela { min-width: 0; margin: 40px auto 0; max-width: 1120px; border-radius: 12px; overflow: hidden; text-align: left;
+  background: var(--fundo); color: var(--texto); box-shadow: 0 24px 64px rgb(0 0 0 / 0.45);
+  border: 1px solid rgb(255 255 255 / 0.12); }
+.jt { display: flex; align-items: center; justify-content: space-between; background: #4b0f19; color: #f0d6d9; font-size: 12px; padding: 0 16px; height: 28px; }
+:root[data-theme="dark"] .jt { background: #0b0d10; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .jt { background: #0b0d10; } }
+.jt span:last-child { letter-spacing: 12px; }
+.jh { display: flex; align-items: center; gap: 16px; background: var(--topo); color: var(--topo-texto); padding: 0 16px; min-height: 56px; overflow-x: auto; }
+.jh .marca { font-size: 15px; margin-right: 16px; }
+.abas { display: flex; gap: 4px; align-items: center; }
+.abas span { display: inline-flex; align-items: center; }
+.abas button, .abas span { font: 500 13px var(--fonte); color: var(--nav-texto); background: none; border: 0; padding: 0 8px; min-height: 44px; white-space: nowrap; opacity: .75; }
+.abas button { cursor: pointer; opacity: 1; border-bottom: 2px solid transparent; }
+.abas button[aria-selected="true"] { border-bottom-color: currentColor; font-weight: 700; }
+.jc { padding: 24px; min-height: 520px; color: var(--fundo-texto); }
+.jc[hidden] { display: none; }
+.dica { margin: 12px 0 0; font-size: 13px; color: var(--fundo-fraco); }
+
+.tit { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.tit h3 { margin: 0; font-size: 22px; }
+.tit .dir { margin-left: auto; font-size: 12px; color: var(--fundo-fraco); }
+.seg { display: flex; gap: 4px; }
+.seg span { padding: 6px 12px; border-radius: var(--raio-controle); font-size: 13px; font-weight: 700; }
+.seg .on { background: var(--topo); }
+
+.cartao { background: var(--superficie); color: var(--texto); border-radius: var(--raio); border: 1px solid var(--borda-cartao); box-shadow: var(--sombra); }
+.totais { display: grid; grid-template-columns: repeat(5, 1fr); margin-bottom: 16px; }
+.totais > div { padding: 16px; border-left: 1px solid var(--linha); }
+.totais > div:first-child { border-left: 0; }
+.totais small { display: block; font-size: 11px; color: var(--texto-fraco); }
+.totais .num { font-size: 20px; display: flex; align-items: center; gap: 8px; }
+.totais.q4 { grid-template-columns: repeat(4, 1fr); }
+
+.contas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.conta { padding: 16px; }
+.conta-top { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+.avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--destaque); background: var(--superficie-2); }
+.conta-top .nome { font-weight: 700; display: flex; gap: 8px; align-items: center; }
+.vip { font-size: 10px; background: #e1b123; color: #3b2a00; padding: 1px 6px; border-radius: 4px; }
+.nv { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--texto-fraco); }
+.barra { height: 4px; border-radius: 4px; background: var(--barra-fundo); overflow: hidden; flex: 1; min-width: 60px; }
+.barra i { display: block; height: 100%; background: var(--barra); }
+.chip { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--ok-fundo); color: var(--ok); white-space: nowrap; }
+.estado { margin-left: auto; font-size: 11px; font-weight: 700; color: var(--ok); white-space: nowrap; }
+.estado::before { content: "● "; }
+.estado.neutro { color: var(--neutro); }
+.estado.neutro::before { content: "■ "; }
+.lcd { display: flex; gap: 12px; align-items: center; background: var(--tela); color: var(--tela-texto); border: 1px solid var(--tela-borda);
+  border-radius: var(--raio-tela); padding: 12px; }
+.lcd img { width: 66px; height: 72px; flex: none; }
+.lcd .meio { flex: 1; min-width: 0; }
+.lcd .meio b { font-size: 15px; }
+.lcd .meio .barra { margin: 8px 0; height: 6px; background: rgb(0 0 0 / 0.15); }
+.lcd .meio .barra i { background: var(--vida); }
+.lcd .meio small { font-size: 11px; color: var(--tela-fraco); }
+.lcd .lado { text-align: right; }
+.lcd .lado small { display: block; font-size: 10px; color: var(--tela-fraco); }
+.lcd .lado .num { font-size: 16px; }
+.itens { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 24px; margin: 12px 0; font-size: 13px; }
+.itens div { display: flex; align-items: center; gap: 8px; }
+.itens .num { margin-left: auto; }
+.itens img { width: 18px; height: auto; }
+.conta-acoes { display: flex; justify-content: flex-end; gap: 8px; }
+.sec { background: var(--superficie-2); color: var(--texto); }
+.vazia { border: 2px dashed var(--fundo-fraco); border-radius: var(--raio); display: grid; place-content: center; text-align: center; gap: 8px; min-height: 160px; font-size: 12px; color: var(--fundo-fraco); }
+
+/* Onde Caçar table */
+.tabela-cartao { padding: 24px; }
+.tabela-cartao p { margin: 4px 0 16px; font-size: 13px; color: var(--texto-fraco); max-width: 60ch; }
+.filtros { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; font-size: 13px; color: var(--texto-fraco); }
+.filtros button { font: 700 13px var(--fonte); min-height: 36px; padding: 0 14px; border-radius: var(--raio-controle); border: 1px solid var(--borda-controle);
+  background: var(--superficie-elevada); color: var(--texto); cursor: pointer; }
+.filtros button[aria-pressed="true"] { background: var(--aba-on-fundo, var(--destaque)); color: var(--destaque-texto); border-color: transparent; }
+.tabela-rolagem { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 640px; }
+th { font-size: 11px; font-weight: 500; color: var(--texto-fraco); text-align: right; padding: 8px; }
+th:nth-child(-n+2), td:nth-child(-n+2) { text-align: left; }
+td { padding: 8px; border-top: 1px solid var(--linha); text-align: right; vertical-align: middle; }
+tr.aqui td { background: var(--ok-fundo); }
+tr.aqui td:first-child { box-shadow: inset 3px 0 0 var(--ok); }
+.bicho { display: flex; align-items: center; gap: 12px; }
+.bicho img { width: 48px; height: auto; }
+.tipos { display: flex; gap: 4px; margin-top: 2px; }
+.tipos span { font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 99px; color: #1a1a1a; }
+.t-gelo { background: #74cfd8; } .t-psiquico { background: #f08cb4; } .t-johto { background: #d6a83a; } .t-voador { background: #9db7f0; }
+.t-terra { background: #d9b46a; } .t-inseto { background: #a5c23a; } .t-aco { background: #b4b8c8; }
+.risco { color: var(--ok); font-weight: 700; }
+.aqui-tag { font-size: 11px; font-weight: 700; background: var(--ok-fundo); color: var(--ok); padding: 2px 8px; border-radius: 99px; border: 1px solid var(--ok); }
+.ir { font: 500 12px var(--fonte); padding: 6px 12px; border-radius: var(--raio-controle); border: 1px solid var(--linha); background: var(--superficie-elevada); color: var(--texto); white-space: nowrap; }
+
+/* Lives */
+.marca-ico { width: 32px; height: 32px; border-radius: 8px; display: grid; place-content: center; color: #fff; font-weight: 700; flex: none; }
+.twitch { background: #9146ff; } .kick { background: #53fc18; color: #0b0b0b; }
+.bloco { display: flex; gap: 12px; align-items: center; background: var(--superficie-2); border-radius: 12px; padding: 12px; margin-top: 12px; font-size: 13px; }
+.bloco .ok { color: var(--ok); font-weight: 700; font-size: 11px; }
+.bloco .direita { margin-left: auto; }
+.btn-twitch { background: #9146ff; color: #fff; } .btn-kick { background: #53fc18; color: #0b0b0b; }
+.grade-lives { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 12px; }
+.thumb { aspect-ratio: 16/9; border-radius: 8px; position: relative; background: linear-gradient(135deg, #2d1b4e, #0f3b4d); }
+.thumb:nth-child(2) { background: linear-gradient(135deg, #3b1f1f, #1f3b2a); }
+.thumb:nth-child(3) { background: linear-gradient(135deg, #1f2a3b, #3b2a1f); }
+.thumb:nth-child(4) { background: linear-gradient(135deg, #3b1f35, #1f2d3b); }
+.thumb b { position: absolute; top: 6px; left: 6px; background: #e91916; color: #fff; font-size: 10px; padding: 1px 6px; border-radius: 4px; }
+
+@media (max-width: 860px) {
+  .contas { grid-template-columns: minmax(0, 1fr); }
+  .conta-top, .nv { flex-wrap: wrap; }
+  .itens { grid-template-columns: minmax(0, 1fr); }
+  .lcd { flex-wrap: wrap; }
+  .lcd .lado { width: 100%; display: flex; gap: 8px; align-items: baseline; justify-content: flex-end; flex-wrap: wrap; }
+  .totais, .totais.q4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .totais .num { font-size: 16px; }
+  .totais > div { border-left: 0; border-top: 1px solid var(--linha); }
+  .grade-lives { grid-template-columns: 1fr 1fr; }
+  .jc { padding: 16px; }
+}
+
+/* Content sections */
+section.bloco-sec { padding: 72px 0; }
+.claro { background: var(--superficie); color: var(--texto); }
+.cab { max-width: 64ch; margin-bottom: 40px; }
+.cab .olho { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--destaque); }
+.escuro-sec .cab .olho { color: var(--fundo-fraco); }
+:root[data-theme="dark"] .claro .cab .olho { color: var(--barra); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .claro .cab .olho { color: var(--barra); } }
+h2 { font-size: clamp(28px, 4vw, 40px); line-height: 1.15; margin: 8px 0 12px; letter-spacing: -0.01em; }
+.cab p { margin: 0; color: var(--texto-fraco); font-size: 18px; }
+.escuro-sec .cab p { color: var(--fundo-fraco); }
+
+/* Before x after */
+.comparar { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-radius: var(--raio); overflow: hidden; border: 1px solid var(--linha); }
+.comparar .col { padding: 24px; }
+.comparar .antes { background: var(--superficie-2); }
+.comparar .depois { background: var(--superficie-elevada); }
+.comparar h3 { margin: 0 0 16px; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+.comparar ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.comparar li { padding: 14px 0 14px 32px; position: relative; border-top: 1px solid var(--linha); min-height: 76px; }
+.comparar li b { display: block; }
+.comparar li span { font-size: 14px; color: var(--texto-fraco); }
+.antes li::before { content: "✕"; position: absolute; left: 0; top: 14px; color: var(--texto-fraco); font-weight: 700; }
+.antes li b { text-decoration: line-through; text-decoration-color: rgb(0 0 0 / 0.35); color: var(--texto-fraco); }
+.depois li::before { content: "✓"; position: absolute; left: 0; top: 14px; color: var(--ok); font-weight: 700; }
+@media (max-width: 760px) { .comparar { grid-template-columns: 1fr; } .comparar li { min-height: 0; } }
+
+.numeros { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 40px; }
+.numeros div { background: var(--tela); color: var(--tela-texto); border: 1px solid var(--tela-borda); border-radius: var(--raio-tela); padding: 20px; }
+.numeros .num { font-size: 32px; display: block; line-height: 1.1; }
+.numeros small { font-size: 14px; color: var(--tela-fraco); }
+@media (max-width: 860px) { .numeros { grid-template-columns: 1fr 1fr; } }
+.nota { font-size: 13px; color: var(--texto-fraco); margin-top: 12px; }
+
+/* Features */
+.recursos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.recursos article { background: var(--superficie); color: var(--texto); border-radius: var(--raio); padding: 24px; border: 1px solid var(--borda-cartao); box-shadow: var(--sombra); }
+.recursos .ico { font-size: 22px; width: 44px; height: 44px; display: grid; place-content: center; border-radius: 12px; background: var(--tela); border: 1px solid var(--tela-borda); margin-bottom: 16px; }
+.recursos h3 { margin: 0 0 8px; font-size: 17px; }
+.recursos p { margin: 0; font-size: 14px; color: var(--texto-fraco); }
+@media (max-width: 960px) { .recursos { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 540px) { .recursos { grid-template-columns: 1fr; } }
+
+/* Safety, install, FAQ */
+.duas { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+@media (max-width: 860px) { .duas { grid-template-columns: 1fr; } }
+.lista-seg { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+.lista-seg li { display: flex; gap: 12px; }
+.lista-seg li::before { content: "🔒"; flex: none; }
+.lista-seg b { display: block; }
+.lista-seg span { color: var(--texto-fraco); font-size: 15px; }
+.passos { counter-reset: p; list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+.passos li { counter-increment: p; display: flex; gap: 16px; background: var(--superficie-2); border-radius: 12px; padding: 16px; }
+.passos li::before { content: counter(p); font: 500 18px var(--fonte-num); width: 36px; height: 36px; flex: none; display: grid; place-content: center;
+  border-radius: 50%; background: var(--destaque); color: var(--destaque-texto); }
+.passos span { color: var(--texto-fraco); font-size: 15px; }
+code { font-family: var(--fonte-num); font-size: .9em; background: var(--superficie-2); padding: 1px 6px; border-radius: 4px; overflow-wrap: anywhere; }
+.passos code { background: var(--superficie); }
+
+details { border-top: 1px solid var(--linha); }
+details:last-child { border-bottom: 1px solid var(--linha); }
+summary { cursor: pointer; padding: 16px 0; font-weight: 700; min-height: 44px; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; font-family: var(--fonte-num); color: var(--destaque); }
+details[open] summary::after { content: "−"; }
+details p { margin: 0 0 16px; color: var(--texto-fraco); }
+
+/* Final CTA, Pix, footer */
+.final { text-align: center; padding: 80px 0; }
+.final h2 { max-width: 20ch; margin: 0 auto 16px; }
+.pix { display: flex; gap: 24px; align-items: center; padding: 24px; margin-top: 48px; text-align: left; }
+.pix img { width: 140px; height: 140px; background: #fff; padding: 8px; border-radius: 12px; flex: none; }
+.pix h3 { margin: 0 0 8px; }
+.pix p { margin: 0 0 8px; color: var(--texto-fraco); font-size: 15px; }
+@media (max-width: 600px) { .pix { flex-direction: column; text-align: center; } }
+footer { padding: 32px 0 48px; font-size: 13px; color: var(--fundo-fraco); text-align: center; }
+footer p { margin: 4px 0; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="marca" href="#topo"><span class="lente" aria-hidden="true"></span><span class="leds" aria-hidden="true"><i></i><i></i><i></i></span>PokeIdle DEX</a>
+    <nav aria-label="Seções">
+      <a href="#comparar">Jogo × DEX</a>
+      <a href="#recursos">Recursos</a>
+      <a href="#seguranca">Segurança</a>
+      <a href="#instalar">Instalar</a>
+      <a href="#faq">Dúvidas</a>
+    </nav>
+    <button class="tema" id="tema" type="button" aria-label="Trocar tema">◐</button>
+    <a class="btn btn-claro btn-sm" href="https://github.com/Garcia019/pokeidle-dex-releases/releases/latest">Baixar</a>
+  </div>
+</header>
+
+<main id="topo">
+  <section class="hero">
+    <div class="wrap">
+      <span class="selo"><b>●</b> <span id="versao">Versão nova disponível</span> · Windows 10/11 · grátis</span>
+      <h1>Suas contas do pokeidle.io caçando juntas, num lugar só.</h1>
+      <p class="sub">Até 4 contas em segundo plano, o melhor lugar para caçar calculado com as regras de combate do jogo, automações e os bônus das lives, sem trocar de aba.</p>
+      <div class="acoes">
+        <a class="btn btn-claro" href="https://github.com/Garcia019/pokeidle-dex-releases/releases/latest">⬇ Baixar grátis</a>
+        <a class="btn btn-contorno" href="https://discord.gg/Zjk8VmYQKT">Entrar no Discord</a>
+      </div>
+      <div class="provas">
+        <span>Sua senha nunca passa pelo app</span>
+        <span>Respeita o limite de 4 contas</span>
+        <span>Atualiza sozinho</span>
+      </div>
+
+      <div class="janela" role="region" aria-label="Demonstração do app">
+        <div class="jt"><span>PokeIdle DEX</span><span aria-hidden="true">–▢✕</span></div>
+        <div class="jh">
+          <span class="marca"><span class="lente" aria-hidden="true"></span><span class="leds" aria-hidden="true"><i></i><i></i><i></i></span>PokeIdle DEX</span>
+          <div class="abas" role="tablist" aria-label="Telas do app">
+            <button role="tab" aria-selected="true" aria-controls="t-painel" id="a-painel">Painel</button>
+            <button role="tab" aria-selected="false" aria-controls="t-cacar" id="a-cacar" tabindex="-1">Onde Caçar</button>
+            <span aria-hidden="true">Automações</span><span aria-hidden="true">Venda</span><span aria-hidden="true">Inventário</span><span aria-hidden="true">Mercado</span>
+            <button role="tab" aria-selected="false" aria-controls="t-lives" id="a-lives" tabindex="-1">Lives</button>
+            <span aria-hidden="true">Votos</span>
+          </div>
+        </div>
+
+        <div class="jc" id="t-painel" role="tabpanel" aria-labelledby="a-painel">
+          <div class="tit"><h3>Painel</h3><div class="seg"><span class="on">Resumo</span><span>Sessão</span></div><span class="dir">2 de 4 contas (limite do jogo)</span></div>
+          <div class="cartao totais">
+            <div><small>XP/h</small><span class="num">51.101.556</span></div>
+            <div><small>Gold/h</small><span class="num"><img class="pixel" src="imagens/sprites/gold.png" alt="" width="18">1.843.898</span></div>
+            <div><small>Contas conectadas</small><span class="num">2 / 4</span></div>
+            <div><small>Gold total</small><span class="num"><img class="pixel" src="imagens/sprites/gold.png" alt="" width="18">68.503.711</span></div>
+            <div><small>Gema total</small><span class="num"><img class="pixel" src="imagens/sprites/gema.png" alt="" width="16">0</span></div>
+          </div>
+          <div class="contas">
+            <div class="cartao conta">
+              <div class="conta-top">
+                <img class="avatar pixel" src="imagens/sprites/avatar-garcia.png" alt="">
+                <div><div class="nome">Garcia_019 <span class="vip">VIP</span></div><div class="nv">Nv 474 <span class="barra" style="width:120px"><i style="width:42%"></i></span> 42% <span class="chip">⚡ XP +83%</span></div></div>
+                <span class="estado">Em segundo plano</span>
+              </div>
+              <div class="lcd">
+                <img class="pixel" src="imagens/sprites/charizard.png" alt="Charizard">
+                <div class="meio"><b>Charizard</b> <span class="num">Nv 474</span><div class="barra"><i style="width:91%"></i></div><small>Em luta: Smoochum · Nv 290 · 86% de vida</small></div>
+                <div class="lado"><small>XP/H</small><span class="num">43.504.688</span><small>GOLD/H</small><span class="num">1.454.835</span></div>
+              </div>
+              <div class="itens">
+                <div>Hunt <b class="num">Smoochum · 1:04:07</b></div>
+                <div><img class="pixel" src="imagens/sprites/potion.png" alt="">Ultra Potion <span class="num">5.620</span></div>
+                <div><img class="pixel" src="imagens/sprites/gold.png" alt="">Gold <span class="num">60.700.698</span></div>
+                <div><img class="pixel" src="imagens/sprites/ultraball.png" alt="">Ultra Ball <span class="num">9.418</span></div>
+              </div>
+              <div class="conta-acoes"><span class="btn btn-principal btn-sm">Jogar na janela</span><span class="btn btn-sm sec">Pausar</span></div>
+            </div>
+            <div class="cartao conta">
+              <div class="conta-top">
+                <img class="avatar pixel" src="imagens/sprites/avatar-baby.png" alt="">
+                <div><div class="nome">Baby_Coin</div><div class="nv">Nv 181 <span class="barra" style="width:120px"><i style="width:36%"></i></span> 36% <span class="chip">⚡ XP +22%</span></div></div>
+                <span class="estado">Em segundo plano</span>
+              </div>
+              <div class="lcd">
+                <img class="pixel" src="imagens/sprites/venusaur.png" alt="Venusaur">
+                <div class="meio"><b>Venusaur</b> <span class="num">Nv 181</span><div class="barra"><i style="width:91%"></i></div><small>Ninguém em luta agora</small></div>
+                <div class="lado"><small>XP/H</small><span class="num">7.596.868</span><small>GOLD/H</small><span class="num">389.063</span></div>
+              </div>
+              <div class="itens">
+                <div>Hunt <b class="num">Ancient Pupitar</b></div>
+                <div><img class="pixel" src="imagens/sprites/potion.png" alt="">Ultra Potion <span class="num">6.559</span></div>
+                <div><img class="pixel" src="imagens/sprites/gold.png" alt="">Gold <span class="num">7.803.013</span></div>
+                <div><img class="pixel" src="imagens/sprites/ultraball.png" alt="">Ultra Ball <span class="num">9.999</span></div>
+              </div>
+              <div class="conta-acoes"><span class="btn btn-principal btn-sm">Jogar na janela</span><span class="btn btn-sm sec">Pausar</span></div>
+            </div>
+            <div class="vazia"><span class="btn btn-principal btn-sm">+ Adicionar conta</span>2 de 4 contas (limite do jogo)</div>
+          </div>
+        </div>
+
+        <div class="jc" id="t-cacar" role="tabpanel" aria-labelledby="a-cacar" hidden>
+          <div class="cartao tabela-cartao">
+            <div class="tit" style="margin:0"><h3>Onde Caçar</h3></div>
+            <p>Simula o Pokémon ativo da conta em cada hunt, com as regras de combate do jogo. Sem bônus de XP (VIP, boosts).</p>
+            <div class="filtros">Ordenar por
+              <button type="button" data-ordem="xp" aria-pressed="true">XP/h</button>
+              <button type="button" data-ordem="gold" aria-pressed="false">Gold/h</button>
+            </div>
+            <div class="tabela-rolagem">
+              <table>
+                <thead><tr><th>#</th><th>Pokémon</th><th>Nível</th><th>Abates/h</th><th>Mata em</th><th>XP/h</th><th>Gold/h</th><th>Risco</th><th></th></tr></thead>
+                <tbody id="hunts"></tbody>
+              </table>
+            </div>
+          </div>
+          <p class="dica">Clique em <b>Gold/h</b> para ver o ranking mudar: a melhor hunt para XP não é a melhor para gold.</p>
+        </div>
+
+        <div class="jc" id="t-lives" role="tabpanel" aria-labelledby="a-lives" hidden>
+          <div class="tit"><h3>Lives</h3></div>
+          <div class="cartao totais q4">
+            <div><small>Lives com bônus no ar</small><span class="num">4</span></div>
+            <div><small>Bônus Twitch agora</small><span class="num">+22,5%</span></div>
+            <div><small>1ª live · cada live a mais</small><span class="num">+15% · +2,5%</span></div>
+            <div><small>Lives na Kick no ar</small><span class="num">6</span></div>
+          </div>
+          <div class="contas">
+            <div class="cartao conta">
+              <div class="conta-top"><img class="avatar pixel" src="imagens/sprites/avatar-garcia.png" alt=""><div class="nome">Garcia_019</div><span class="estado">Com bônus</span></div>
+              <div class="bloco"><span class="marca-ico twitch">T</span><div><b class="num">+22,5%</b> de XP pela Twitch agora<br><span class="ok">✓ Twitch vinculada</span></div></div>
+              <div class="conta-acoes" style="margin-top:12px"><span class="btn btn-sm btn-twitch">Abrir multi-lives (4)</span></div>
+              <div class="bloco"><span class="marca-ico kick">K</span><div>2 lives da Kick abertas<br><span class="ok">✓ Troca sozinha quando a live acaba</span></div></div>
+            </div>
+            <div class="cartao conta">
+              <div class="conta-top"><img class="avatar pixel" src="imagens/sprites/avatar-baby.png" alt=""><div class="nome">Baby_Coin</div><span class="estado neutro">Sem bônus agora</span></div>
+              <div class="bloco"><span class="marca-ico twitch">T</span><div><b class="num">+0%</b> de XP pela Twitch agora<br><span style="font-size:11px">Vincule a Twitch para ganhar o bônus</span></div></div>
+              <div class="conta-acoes" style="margin-top:12px"><span class="btn btn-sm btn-twitch">Vincular Twitch</span></div>
+              <div class="bloco"><span class="marca-ico kick">K</span><div>Vincule a Kick para trocar pontos por bônus</div><span class="btn btn-sm btn-kick direita">Vincular Kick</span></div>
+            </div>
+          </div>
+          <div class="cartao conta" style="margin-top:16px">
+            <div class="conta-top"><span class="marca-ico twitch">T</span><b>Lives na Twitch</b><span class="dir" style="margin-left:auto;font-size:12px;color:var(--texto-fraco)">4 ao vivo</span></div>
+            <div class="grade-lives"><div class="thumb"><b>AO VIVO</b></div><div class="thumb"><b>AO VIVO</b></div><div class="thumb"><b>AO VIVO</b></div><div class="thumb"><b>AO VIVO</b></div></div>
+          </div>
+        </div>
+      </div>
+      <p class="miudo">Telas reais do app recriadas aqui. Clique nas abas <b>Painel</b>, <b>Onde Caçar</b> e <b>Lives</b>.</p>
+    </div>
+  </section>
+
+  <section class="bloco-sec claro" id="comparar">
+    <div class="wrap">
+      <div class="cab">
+        <span class="olho">Jogo puro × jogo + DEX</span>
+        <h2>O jogo continua o mesmo. Você joga melhor.</h2>
+        <p>O DEX não muda as regras do pokeidle.io. Ele tira o trabalho repetitivo e mostra os números que o jogo esconde, para você decidir melhor.</p>
+      </div>
+      <div class="comparar">
+        <div class="col antes">
+          <h3>Só o jogo</h3>
+          <ul>
+            <li><b>Uma aba do navegador por conta</b><span>Trocar de janela o tempo todo para ver cada uma.</span></li>
+            <li><b>Escolher hunt no chute</b><span>Testar uma por uma ou confiar em planilha desatualizada.</span></li>
+            <li><b>XP/h e gold/h de cabeça</b><span>Sem saber quanto cada conta rende de verdade.</span></li>
+            <li><b>Abrir live por live para ganhar bônus</b><span>E perceber tarde que a live acabou e o bônus parou.</span></li>
+            <li><b>Votar conta por conta</b><span>Entrar e sair de cada conta todo dia.</span></li>
+            <li><b>Comprar e vender na mão</b><span>A poção acaba no meio da hunt e ninguém avisa.</span></li>
+          </ul>
+        </div>
+        <div class="col depois">
+          <h3>Com o PokeIdle DEX</h3>
+          <ul>
+            <li><b>Até 4 contas num painel só</b><span>Todas em segundo plano, com o Pokémon em luta e os itens ao vivo.</span></li>
+            <li><b>Ranking de hunts para o seu Pokémon</b><span>Simulado com as regras de combate do jogo, por XP/h ou gold/h.</span></li>
+            <li><b>Totais ao vivo de todas as contas</b><span>XP/h, gold/h, gold e gemas somados no topo.</span></li>
+            <li><b>Multi-lives da Twitch numa janela</b><span>E até 2 lives da Kick que trocam sozinhas quando uma acaba.</span></li>
+            <li><b>Votos de todas as contas num lugar</b><span>Votar no TopIdle com cada conta sem fazer login de novo.</span></li>
+            <li><b>Compra e venda automática</b><span>Dentro do que o próprio jogo permite automatizar.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="numeros">
+        <div><span class="num">4</span><small>contas ao mesmo tempo, o limite do jogo</small></div>
+        <div><span class="num">+15%</span><small>de XP a mais escolhendo a hunt pelo ranking (exemplo abaixo)</small></div>
+        <div><span class="num">+22,5%</span><small>de XP com 4 lives abertas (15% na 1ª e 2,5% por live a mais)</small></div>
+        <div><span class="num">0</span><small>senhas guardadas pelo app</small></div>
+      </div>
+      <p class="nota">Exemplo real do print da aba Onde Caçar: para o Charizard nível 474, a 1ª hunt do ranking (Smoochum) dá 24,7 mi XP/h e a 5ª (Pineco) dá 21,4 mi. A diferença varia com o seu Pokémon. Os bônus de live são do próprio jogo; o DEX só deixa as lives abertas para você.</p>
+    </div>
+  </section>
+
+  <section class="bloco-sec escuro-sec" id="recursos">
+    <div class="wrap">
+      <div class="cab">
+        <span class="olho">Recursos</span>
+        <h2>Tudo o que você fazia em 5 abas, numa janela.</h2>
+      </div>
+      <div class="recursos">
+        <article><div class="ico" aria-hidden="true">📟</div><h3>Painel</h3><p>Todas as contas ao vivo, com XP/h, gold/h, Pokémon em luta e itens.</p></article>
+        <article><div class="ico" aria-hidden="true">🎯</div><h3>Onde Caçar</h3><p>Simula o seu Pokémon em cada hunt e mostra onde rende mais XP ou gold.</p></article>
+        <article><div class="ico" aria-hidden="true">⚙️</div><h3>Automações</h3><p>Compra e venda automática e o que mais o jogo permite automatizar.</p></article>
+        <article><div class="ico" aria-hidden="true">🎒</div><h3>Inventário e Mercado</h3><p>Itens, Pokémon e preços do mercado, só para consulta.</p></article>
+        <article><div class="ico" aria-hidden="true">📺</div><h3>Lives</h3><p>Multi-lives da Twitch numa janela e até 2 lives da Kick com troca automática.</p></article>
+        <article><div class="ico" aria-hidden="true">🗳️</div><h3>Votos</h3><p>Votar no TopIdle com cada conta, sem trocar de login.</p></article>
+        <article><div class="ico" aria-hidden="true">🕹️</div><h3>Jogar na janela</h3><p>Abre o jogo com a conta já logada, num clique.</p></article>
+        <article><div class="ico" aria-hidden="true">🔄</div><h3>Atualiza sozinho</h3><p>Versão nova chega com aviso dentro do app, só com a assinatura do projeto.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloco-sec claro" id="seguranca">
+    <div class="wrap duas">
+      <div>
+        <div class="cab">
+          <span class="olho">Segurança</span>
+          <h2>Seguro de verdade.</h2>
+          <p>Feito para jogar junto com o jogo, não contra ele.</p>
+        </div>
+        <ul class="lista-seg">
+          <li><div><b>Sua senha nunca passa pelo app</b><span>O login é feito na página oficial do jogo; o app guarda só a sessão, no cofre de credenciais do Windows.</span></div></li>
+          <li><div><b>Nunca burla o captcha</b><span>E nunca deixa passar de 4 contas, o limite do jogo.</span></div></li>
+          <li><div><b>Seus dados não saem do seu PC</b><span>Só vão para o próprio jogo. O app só consulta se há versão nova, sem mandar nada das suas contas.</span></div></li>
+          <li><div><b>Atualizações assinadas</b><span>O app recusa qualquer atualização sem a assinatura do projeto.</span></div></li>
+        </ul>
+      </div>
+      <div id="instalar">
+        <div class="cab">
+          <span class="olho">Instalar</span>
+          <h2>Pronto em 1 minuto.</h2>
+        </div>
+        <ol class="passos">
+          <li><div><b>Baixe o instalador</b><br><span>O arquivo <code>PokeIdle.DEX_x.y.z_x64-setup.exe</code> na <a href="https://github.com/Garcia019/pokeidle-dex-releases/releases/latest">versão mais nova</a>.</span></div></li>
+          <li><div><b>Abra o instalador</b><br><span>Se o Windows mostrar "O Windows protegeu o computador", clique em <b>Mais informações › Executar assim mesmo</b>.</span></div></li>
+          <li><div><b>Adicione sua conta</b><br><span>Clique em <b>Adicionar conta</b> e entre como no site do jogo.</span></div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloco-sec claro" id="faq" style="padding-top:0">
+    <div class="wrap">
+      <div class="cab"><span class="olho">Dúvidas</span><h2>Perguntas frequentes</h2></div>
+      <details><summary>É grátis?</summary><p>Sim. O PokeIdle DEX é gratuito e feito nas horas vagas. Se ele te ajuda, um Pix de qualquer valor ajuda a mantê-lo vivo.</p></details>
+      <details><summary>Por que o Windows mostra um aviso ao instalar?</summary><p>O instalador ainda não tem o certificado pago da Microsoft, então o SmartScreen avisa em todo app novo sem certificado. As atualizações dentro do app são assinadas pelo projeto e o app recusa qualquer uma sem essa assinatura.</p></details>
+      <details><summary>O app pede minha senha?</summary><p>Não. O login é feito na página oficial do jogo, dentro do app. O DEX guarda só a sessão, no cofre de credenciais do Windows.</p></details>
+      <details><summary>Quantas contas posso usar?</summary><p>Até 4, que é o limite do próprio jogo. O app nunca deixa passar disso e nunca burla o captcha.</p></details>
+      <details><summary>Funciona no Mac, Linux ou celular?</summary><p>Por enquanto só no Windows 10 e 11.</p></details>
+      <details><summary>É um app oficial do pokeidle.io?</summary><p>Não. É um projeto de fãs, sem ligação com o pokeidle.io. Pokémon e pokeidle.io pertencem aos seus donos.</p></details>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap">
+      <h2>Deixe o trabalho repetitivo com o DEX e aproveite o jogo.</h2>
+      <div class="acoes">
+        <a class="btn btn-claro" href="https://github.com/Garcia019/pokeidle-dex-releases/releases/latest">⬇ Baixar grátis</a>
+        <a class="btn btn-contorno" href="https://discord.gg/Zjk8VmYQKT">Entrar no Discord</a>
+      </div>
+      <p class="miudo">Windows 10/11 · grátis · licença GPL-3.0</p>
+
+      <div class="cartao pix">
+        <img src="imagens/pix-qr.svg" alt="QR code Pix para doar ao PokeIdle DEX">
+        <div>
+          <h3>Ajude a manter o PokeIdle DEX de pé</h3>
+          <p>O app é gratuito e feito nas horas vagas pelos criadores. Qualquer valor por Pix ajuda a mantê-lo vivo e sempre atualizado.</p>
+          <p>Chave Pix (aleatória): <code>59b3446c-cfdb-4d0e-8760-532733ab174f</code></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Feito por <a href="https://github.com/Garcia019">Garcia019</a> (Matheus) e Luxca (Lucas).</p>
+    <p>Projeto de fãs, sem ligação com o pokeidle.io. Pokémon e pokeidle.io pertencem aos seus donos.</p>
+  </div>
+</footer>
+
+<script>
+// Theme: follows Windows by default, the button flips it; remembered per browser when storage works.
+const root = document.documentElement;
+try { const t = localStorage.getItem("tema"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("tema").addEventListener("click", () => {
+  const atual = root.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  root.dataset.theme = atual === "dark" ? "light" : "dark";
+  try { localStorage.setItem("tema", root.dataset.theme); } catch {}
+});
+
+// App window tabs (WAI-ARIA tabs: click and arrow keys).
+const abas = [...document.querySelectorAll('[role="tab"]')];
+function abrir(aba) {
+  abas.forEach(a => {
+    const on = a === aba;
+    a.setAttribute("aria-selected", on); a.tabIndex = on ? 0 : -1;
+    document.getElementById(a.getAttribute("aria-controls")).hidden = !on;
+  });
+  aba.focus();
+}
+abas.forEach((a, i) => {
+  a.addEventListener("click", () => abrir(a));
+  a.addEventListener("keydown", e => {
+    const d = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+    if (d) abrir(abas[(i + d + abas.length) % abas.length]);
+  });
+});
+
+// Onde Caçar: numbers from the app screenshot (Charizard Nv 474).
+const hunts = [
+  { nome: "Smoochum", sprite: "smoochum", tipos: ["Gelo", "Psíquico"], nivel: 290, abates: 802, mata: "3 s", xp: 24670828, gold: 1000429, risco: 2, aqui: true },
+  { nome: "Delibird", sprite: "delibird", tipos: ["Gelo", "Voador"], nivel: 320, abates: 633, mata: "3,4 s", xp: 22017284, gold: 837525, risco: 11 },
+  { nome: "Swinub", sprite: "swinub", tipos: ["Gelo", "Terra"], nivel: 230, abates: 942, mata: "1,1 s", xp: 21700154, gold: 1023068, risco: 1 },
+  { nome: "Forretress", sprite: "forretress", tipos: ["Inseto", "Aço"], nivel: 440, abates: 416, mata: "6,6 s", xp: 21559267, gold: 666850, risco: 9 },
+  { nome: "Pineco", sprite: "pineco", tipos: ["Inseto"], nivel: 230, abates: 928, mata: "1,2 s", xp: 21385743, gold: 1008245, risco: 0 },
+];
+const classe = t => "t-" + t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+const fmt = n => n.toLocaleString("pt-BR");
+function ordenar(campo) {
+  document.getElementById("hunts").innerHTML = [...hunts].sort((a, b) => b[campo] - a[campo]).map((h, i) => `
+    <tr class="${h.aqui ? "aqui" : ""}">
+      <td class="num">${i + 1}</td>
+      <td><div class="bicho"><img class="pixel" src="imagens/sprites/${h.sprite}.png" alt="">
+        <div><b>${h.nome}</b><div class="tipos">${[...h.tipos, "Johto"].map(t => `<span class="${classe(t)}">${t}</span>`).join("")}</div></div></div></td>
+      <td class="num">${h.nivel}</td><td class="num">${h.abates}</td><td class="num">${h.mata}</td>
+      <td class="num">${fmt(h.xp)}</td><td class="num">${fmt(h.gold)}</td>
+      <td class="risco num">✓ ${h.risco}%</td>
+      <td>${h.aqui ? '<span class="aqui-tag">Você está aqui</span>' : '<span class="ir">Ir para esta hunt</span>'}</td>
+    </tr>`).join("");
+  document.querySelectorAll("[data-ordem]").forEach(b => b.setAttribute("aria-pressed", b.dataset.ordem === campo));
+}
+document.querySelectorAll("[data-ordem]").forEach(b => b.addEventListener("click", () => ordenar(b.dataset.ordem)));
+ordenar("xp");
+
+// Latest version for the badge; the page works the same if GitHub does not answer.
+fetch("https://api.github.com/repos/Garcia019/pokeidle-dex-releases/releases/latest")
+  .then(r => r.ok ? r.json() : null)
+  .then(r => { if (r && r.tag_name) document.getElementById("versao").textContent = "Versão " + r.tag_name.replace(/^v/, ""); })
+  .catch(() => {});
+</script>
+</body>
+</html>
