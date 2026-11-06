@@ -281,6 +281,24 @@ h2 { font-size: clamp(28px, 4vw, 40px); line-height: 1.15; margin: 8px 0 12px; l
 .numeros small { font-size: 14px; color: var(--tela-fraco); }
 @media (max-width: 860px) { .numeros { grid-template-columns: 1fr 1fr; } }
 .nota { font-size: 13px; color: var(--texto-fraco); margin-top: 12px; }
+.escuro-sec .nota { color: var(--fundo-fraco); }
+.escuro-sec .nota a { color: var(--fundo-texto); }
+
+/* Video: a 16:9 frame in the app-window style; the YouTube player replaces the cover on click. */
+.video { position: relative; max-width: 960px; aspect-ratio: 16 / 9; border-radius: var(--raio-tela); overflow: hidden;
+  background: #000; box-shadow: 0 24px 64px rgb(0 0 0 / 0.45); border: 1px solid rgb(255 255 255 / 0.12); }
+.video iframe, .video-capa { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.video-capa { padding: 0; cursor: pointer; background: #000; }
+.video-capa img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .2s; }
+.video-capa:hover img { opacity: .85; }
+.video-capa:focus-visible { outline: 3px solid var(--cta-fundo); outline-offset: -3px; }
+.video-play { position: absolute; top: 50%; left: 50%; width: 76px; height: 76px; margin: -38px 0 0 -38px; border-radius: 50%;
+  display: grid; place-items: center; padding-left: 6px; font-size: 28px; background: var(--cta-fundo); color: var(--cta-texto);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.4); transition: transform .2s; }
+.video-capa:hover .video-play { transform: scale(1.08); }
+.video-dur { position: absolute; right: 12px; bottom: 12px; padding: 2px 8px; border-radius: 6px; background: rgb(0 0 0 / 0.75);
+  color: #fff; font: 600 13px var(--fonte-num); }
+@media (prefers-reduced-motion: reduce) { .video-capa img, .video-play { transition: none; } }
 
 /* Features */
 .recursos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
@@ -348,6 +366,7 @@ footer p { margin: 4px 0; }
     <nav aria-label="Seções">
       <a href="#comparar">Jogo × DEX</a>
       <a href="#recursos">Recursos</a>
+      <a href="#video">Vídeo</a>
       <a href="#seguranca">Segurança</a>
       <a href="#instalar">Instalar</a>
       <a href="#faq">Dúvidas</a>
@@ -552,6 +571,25 @@ footer p { margin: 4px 0; }
     </div>
   </section>
 
+  <section class="bloco-sec escuro-sec" id="video" style="padding-top:0">
+    <div class="wrap">
+      <div class="cab">
+        <span class="olho">Vídeo</span>
+        <h2>Veja o DEX funcionando, aba por aba.</h2>
+        <p>Em 6 minutos o Luxca mostra o painel, as hunts, as automações e as lives no app de verdade.</p>
+      </div>
+      <div class="video">
+        <!-- The YouTube player loads only on click: lighter page, and no YouTube cookie before the visitor asks. -->
+        <button type="button" class="video-capa" data-video="AEMjQDQbvIM" aria-label="Assistir ao vídeo de apresentação do PokeIdle DEX (6 min)">
+          <img src="https://i.ytimg.com/vi/AEMjQDQbvIM/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy">
+          <span class="video-play" aria-hidden="true">▶</span>
+          <span class="video-dur">6:40</span>
+        </button>
+      </div>
+      <p class="nota">Vídeo do Luxca no YouTube · <a href="https://youtu.be/AEMjQDQbvIM">abrir no YouTube</a></p>
+    </div>
+  </section>
+
   <section class="bloco-sec claro" id="seguranca">
     <div class="wrap duas">
       <div>
@@ -635,6 +673,16 @@ footer p { margin: 4px 0; }
 </footer>
 
 <script>
+document.querySelectorAll("[data-video]").forEach((b) => b.addEventListener("click", () => {
+  const f = document.createElement("iframe");
+  f.src = `https://www.youtube-nocookie.com/embed/${b.dataset.video}?autoplay=1&rel=0`;
+  f.title = "PokeIdle DEX - apresentação do app";
+  f.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+  f.allowFullscreen = true;
+  f.referrerPolicy = "strict-origin-when-cross-origin";
+  b.replaceWith(f);
+  f.focus();
+}));
 // Theme: follows Windows by default, the button flips it; remembered per browser when storage works.
 const root = document.documentElement;
 try { const t = localStorage.getItem("tema"); if (t) root.dataset.theme = t; } catch {}
